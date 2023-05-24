@@ -4,7 +4,7 @@
         <div class="flex items-center justify-center space-x-4">
             <div
                 class="w-96 h-auto bg-white rounded-md flex flex-col items-center justify-start overflow-hidden shadow-2xl"
-                v-for="movie in movies"
+                v-for="(movie, movieIndex) in movies"
                 :key="movie.id"
             >
                 <div class="h-[520px] overflow-hidden w-full relative">
@@ -33,11 +33,20 @@
                     </div>
                     <div class="w-full flex items-center justify-start h-8 shrink-0">
                         <span class="text-xs mr-2 leading-7"> Rating: ({{ movie.rating }}/5) </span>
-                        <StarIcon
-                            v-for="star in movie.rating"
-                            :key="`star-${star}`"
-                            class="h-5 w-5 text-yellow-500"
-                        />
+                        <div class="items-center justify-start flex flex-1 space-x-1">
+                            <button
+                                v-for="star in 5"
+                                :key="star"
+                                class="rounded-md disabled:cursor-not-allowed"
+                                :class="[
+                                    star <= movie.rating ? 'text-yellow-500' : 'text-gray-500',
+                                ]"
+                                :disabled="star === movie.rating"
+                                @click="updateRating(movieIndex, star)"
+                            >
+                                <StarIcon class="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,13 +55,14 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { ref } from "vue";
 import { items } from "./movies.json";
 import { StarIcon } from "@heroicons/vue/24/solid";
-/*
- This is an Icon that you can use to represent the stars if you like
- otherwise you could just use a simple ⭐️ emoji, or * character.
-*/
-const movies = reactive(items);
+
+const movies = ref(items);
+
+function updateRating(movieIndex, rating) {
+    movies.value[movieIndex].rating = rating;
+}
 </script>
 
