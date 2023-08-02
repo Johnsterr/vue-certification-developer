@@ -13,6 +13,20 @@
                         :src="movie.image"
                         :alt="movie.name"
                     />
+                    <div class="absolute top-0 right-0">
+                        <div
+                            class="relative"
+                            :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']"
+                        >
+                            <StarIcon class="h-16 w-16" />
+                            <span
+                                class="absolute block h-5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                                :class="[movie.rating ? 'text-yellow-800' : 'text-gray-800']"
+                            >
+                                {{ movie.rating ? movie.rating : "-" }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="h-56 p-4 flex flex-col items-start justify-start w-full">

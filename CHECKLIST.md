@@ -11,3 +11,8 @@
 -   Clicking on a button updates the rating of that movie.
 -   The button for the rating number is disabled if that rating is the current one of the movie.
 
+### Challenge 3
+
+-   Display each movie rating number within a large yellow `StarIcon` in the top right hand corner of the movie posters
+-   For movies with no rating, show a dash instead of the number and color the `StarIcon` gray
+
