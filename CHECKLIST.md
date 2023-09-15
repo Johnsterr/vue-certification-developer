@@ -16,3 +16,20 @@
 -   Display each movie rating number within a large yellow `StarIcon` in the top right hand corner of the movie posters
 -   For movies with no rating, show a dash instead of the number and color the `StarIcon` gray
 
+### Challenge 4
+
+-   Create an "Add Movie" button
+-   Show a form for creating new movies when the button is clicked
+-   Include the following fields on the form:
+    -   Name: text input & required
+    -   Description: textarea
+    -   Image: text input
+    -   Genre: dropdown & required & user can select multiple
+    -   Is in theaters: checkbox
+-   Validate the form on submit
+-   Once submitted and valid, add the movie to the list
+-   Clear and hide the form after the movie is added
+-   Add a cancel button to the form
+    -   Clicking the cancel button should clean up the form, and any error that it might have.
+    -   Clicking the cancel button should hide the form for the user.
+
