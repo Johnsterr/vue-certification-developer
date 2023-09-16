@@ -9,7 +9,7 @@
                 <div
                     class="shrink-0 w-full max-w-2xl rounded-md flex flex-col overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-4 space-y-4 dark:text-white"
                 >
-                    <form @submit.prevent="addMovie">
+                    <form @submit.prevent="saveMovie">
                         <div class="flex flex-col items-start justify-start w-full">
                             <label for="name">Name</label>
                             <input
@@ -95,13 +95,25 @@
                                 type="submit"
                                 class="bg-cyan-500 hover:bg-cyan-400 p-2 rounded-md text-white"
                             >
-                                Create
+                                <span v-if="form.id">Update</span>
+                                <span v-else>Create</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="flex items-center pb-8">
+                <div class="flex items-center justify-center space-x-8 text-white text-xl">
+                    <span>Total Movies: {{ totalMovies }}</span>
+                    <span> / </span>
+                    <span>Average Rating: {{ averageRating }}</span>
+                </div>
+                <button
+                    class="text-sm self-end justify-self-end bg-cyan-500 hover:bg-cyan-400 p-2 rounded-md text-white"
+                    @click="removeRatings"
+                >
+                    Remove Ratings
+                </button>
                 <button
                     class="p-2 rounded-md text-sm self-end justify-self-end"
                     :class="{
@@ -176,6 +188,22 @@
                                     <StarIcon class="h-5 w-5" />
                                 </button>
                             </div>
+                            <div
+                                class="group-hover:flex shrink-0 items-center justify-end space-x-2"
+                            >
+                                <button
+                                    class="movie-item-action-edit-button"
+                                    @click="editMovie(movieIndex)"
+                                >
+                                    <PencilIcon class="w-4 h-4" />
+                                </button>
+                                <button
+                                    class="movie-item-action-remove-button"
+                                    @click="removeMovie(movieIndex)"
+                                >
+                                    <TrashIcon class="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,9 +213,9 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { items } from "./movies.json";
-import { StarIcon } from "@heroicons/vue/24/solid";
+import { StarIcon, TrashIcon, PencilIcon } from "@heroicons/vue/24/solid";
 
 const movies = ref(items);
 const showMovieForm = ref(false);
@@ -201,11 +229,12 @@ const errors = reactive({
 });
 
 const form = reactive({
+    id: null,
     name: null,
     description: null,
     image: null,
     inTheaters: false,
-    genres: [],
+    genres: null,
 });
 
 const validations = reactive({
@@ -262,6 +291,55 @@ function addMovie() {
     }
 }
 
+function removeMovie(movieIndex) {
+    movies.value = movies.value.filter((movie, index) => index !== movieIndex);
+}
+
+function editMovie(movieIndex) {
+    const movie = movies.value[movieIndex];
+
+    form.id = movie.id;
+    form.name = movie.name;
+    form.description = movie.description;
+    form.image = movie.image;
+    form.inTheaters = movie.inTheaters;
+    form.genres = movie.genres;
+
+    showForm();
+}
+
+function saveMovie() {
+    if (form.id) {
+        updateMovie();
+    } else {
+        addMovie();
+    }
+}
+
+function updateMovie() {
+    if (validate()) {
+        const movie = {
+            id: form.id,
+            name: form.name,
+            description: form.description,
+            image: form.image,
+            genres: form.genres,
+            inTheaters: form.inTheaters,
+            rating: 0,
+        };
+
+        movies.value = movies.value.map((m) => {
+            if (m.id === movie.id) {
+                movie.rating = m.rating;
+                return movie;
+            }
+            return m;
+        });
+
+        hideForm();
+    }
+}
+
 function cleanUpForm() {
     form.name = null;
     form.description = null;
@@ -286,6 +364,23 @@ function hideForm() {
 
 function showForm() {
     showMovieForm.value = true;
+}
+
+const averageRating = computed(() => {
+    const avg = movies.value.map((movie) => parseInt(movie.rating || 0)).reduce((a, b) => a + b, 0);
+
+    return Number(avg / movies.value.length).toFixed(1);
+});
+
+const totalMovies = computed(() => {
+    return movies.value.length;
+});
+
+function removeRatings() {
+    movies.value = movies.value.map((movie) => {
+        movie.rating = 0;
+        return movie;
+    });
 }
 </script>
 
