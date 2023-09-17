@@ -46,3 +46,18 @@
     -   On form submit, replace the old movie values with the new
     -   Ensure that the ratings of that movie are not lost when you edit it
 
+### Challenge 6
+
+-   Move the current template for a movie into the `MovieItem.vue` component.
+-   Replace the current part of our template where the movie is displayed with the `MovieItem.vue` component
+-   Move the `notRated` value into the `MovieItem.vue` component, create a computed property out of it.
+-   The `MovieItem.vue` component should have the following props:
+    -   `movie`: It should receive the movie object.
+-   Create `3` custom events in the `MovieItem.vue` component.
+    -   `edit`: Should be dispatched when the user clicks the `edit` button with the `id` as parameter
+    -   `remove`: Should be dispatched when the user clicks the `remove` button with the `id` as parameter
+    -   `update:rating`: Should be dispatched when the user updates the rating with the `id` and the new `rating` as parameter
+-   Change the behavior of the `updateRating` to accept the movie `id` instead of the `movieIndex`
+-   Change the behavior of the `removeMovie` to accept the movie `id` instead of the `movieIndex`
+-   Change the behavior of the `editMovie` to accept the movie `id` instead of the `movieIndex`
+

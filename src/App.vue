@@ -127,86 +127,14 @@
                 </button>
             </div>
             <div class="flex flex-wrap items-start justify-between">
-                <div
-                    class="w-96 shrink-0 h-auto bg-white rounded-md flex flex-col items-center justify-start overflow-hidden shadow-2xl mr-8 mt-8"
-                    v-for="(movie, movieIndex) in movies"
+                <MovieItem
+                    v-for="movie in movies"
                     :key="movie.id"
-                >
-                    <div class="h-[520px] overflow-hidden w-full relative">
-                        <div class="absolute top-0 right-0">
-                            <div
-                                class="relative"
-                                :class="[movie.rating ? 'text-yellow-500' : 'text-gray-500']"
-                            >
-                                <StarIcon class="h-16 w-16" />
-                                <span
-                                    class="absolute block h-5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                                    :class="[movie.rating ? 'text-yellow-800' : 'text-gray-800']"
-                                >
-                                    {{ movie.rating ? movie.rating : "-" }}
-                                </span>
-                            </div>
-                        </div>
-                        <img
-                            class="object-cover object-center h-[600px]"
-                            :src="movie.image"
-                            :alt="movie.name"
-                        />
-                    </div>
-
-                    <div class="h-56 p-4 flex flex-col items-start justify-start w-full">
-                        <div class="h-16 shrink-0 w-full">
-                            <h3 class="text-2xl">{{ movie.name }}</h3>
-                            <div class="flex items-center justify-start space-x-1">
-                                <span
-                                    v-for="genre in movie.genres"
-                                    :key="`${movie.id}-${genre}`"
-                                    class="text-xs bg-indigo-500 text-white py-0.5 px-2 rounded-full"
-                                >
-                                    {{ genre }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="h-24 overflow-auto flex-1">
-                            <p class="text-sm">{{ movie.description }}</p>
-                        </div>
-                        <div class="w-full flex items-center justify-start h-8 shrink-0">
-                            <span class="text-xs mr-2 leading-7">
-                                Rating: ({{ movie.rating }}/5)
-                            </span>
-                            <div class="items-center justify-start flex flex-1 space-x-1">
-                                <button
-                                    v-for="star in 5"
-                                    :key="star"
-                                    class="rounded-md disabled:cursor-not-allowed"
-                                    :class="[
-                                        star <= movie.rating ? 'text-yellow-500' : 'text-gray-500',
-                                    ]"
-                                    :disabled="star === movie.rating"
-                                    @click="updateRating(movieIndex, star)"
-                                >
-                                    <StarIcon class="h-5 w-5" />
-                                </button>
-                            </div>
-                            <div
-                                class="group-hover:flex shrink-0 items-center justify-end space-x-2"
-                            >
-                                <button
-                                    class="movie-item-action-edit-button"
-                                    @click="editMovie(movieIndex)"
-                                >
-                                    <PencilIcon class="w-4 h-4" />
-                                </button>
-                                <button
-                                    class="movie-item-action-remove-button"
-                                    @click="removeMovie(movieIndex)"
-                                >
-                                    <TrashIcon class="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    :movie="movie"
+                    @edit="editMovie"
+                    @remove="removeMovie"
+                    @update:rating="updateRating"
+                />
             </div>
         </div>
     </div>
@@ -214,8 +142,8 @@
 
 <script setup>
 import { computed, reactive, ref } from "vue";
+import MovieItem from "@/MovieItem.vue";
 import { items } from "./movies.json";
-import { StarIcon, TrashIcon, PencilIcon } from "@heroicons/vue/24/solid";
 
 const movies = ref(items);
 const showMovieForm = ref(false);
@@ -249,8 +177,30 @@ const genres = reactive([
     { text: "Comedy", value: "Comedy" },
 ]);
 
-function updateRating(movieIndex, rating) {
-    movies.value[movieIndex].rating = rating;
+function updateRating(id, rating) {
+    movies.value = movies.value.map((movie) => {
+        if (movie.id === id) {
+            movie.rating = rating;
+        }
+        return movie;
+    });
+}
+
+function removeMovie(id) {
+    movies.value = movies.value.filter((movie) => movie.id !== id);
+}
+
+function editMovie(id) {
+    const movie = movies.value.find((movie) => movie.id === id);
+
+    form.id = movie.id;
+    form.name = movie.name;
+    form.description = movie.description;
+    form.image = movie.image;
+    form.inTheaters = movie.inTheaters;
+    form.genres = movie.genres;
+
+    showForm();
 }
 
 const validationRules = (rule) => {
@@ -289,23 +239,6 @@ function addMovie() {
         movies.value.push(movie);
         hideForm();
     }
-}
-
-function removeMovie(movieIndex) {
-    movies.value = movies.value.filter((movie, index) => index !== movieIndex);
-}
-
-function editMovie(movieIndex) {
-    const movie = movies.value[movieIndex];
-
-    form.id = movie.id;
-    form.name = movie.name;
-    form.description = movie.description;
-    form.image = movie.image;
-    form.inTheaters = movie.inTheaters;
-    form.genres = movie.genres;
-
-    showForm();
 }
 
 function saveMovie() {
