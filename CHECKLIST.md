@@ -61,3 +61,14 @@
 -   Change the behavior of the `removeMovie` to accept the movie `id` instead of the `movieIndex`
 -   Change the behavior of the `editMovie` to accept the movie `id` instead of the `movieIndex`
 
+### Challenge 7
+
+-   Move the current template for the form into the `MovieForm.vue` component.
+-   Replace the current part of our template where the form is displayed, with the `MovieForm.vue` component
+-   The `MovieForm.vue` component should have the following props:
+    -   `modelValue`: It should receive the movie object, it should be optional.
+-   Create `2` custom events in the `MovieForm.vue` component.
+    -   `update:modelValue`: Should be dispatched when the user clicks the `save` button and include the `form` as the payload
+    -   `cancel`: Should be dispatched when the user clicks the `cancel` button and requires no payload.
+-   The rest of our application functionality should still work as expected.
+
