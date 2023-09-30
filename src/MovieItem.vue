@@ -32,6 +32,9 @@
                 :src="movie.image"
                 :alt="movie.name"
             />
+            <span v-else class="movie-item-no-image">
+                <span class="text-white text-4xl">No image</span>
+            </span>
         </div>
 
         <div class="h-56 p-4 flex flex-col items-start justify-start w-full">

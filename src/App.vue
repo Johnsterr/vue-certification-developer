@@ -1,20 +1,17 @@
 <template>
     <div class="container mx-auto">
         <div class="py-14">
-            <div
+            <AppModal
                 v-if="showMovieForm"
-                class="absolute inset-0 flex items-center justify-center z-20 bg-gray-800/40 backdrop-blur"
+                :title="currentMovie?.id ? 'Edit Movie' : 'Add Movie'"
+                @close="hideForm()"
             >
-                <div
-                    class="shrink-0 w-full max-w-2xl rounded-md flex flex-col overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-4 space-y-4 dark:text-white"
-                >
-                    <MovieForm
-                        @update:modelValue="saveMovie"
-                        :modelValue="currentMovie"
-                        @cancel="hideForm"
-                    />
-                </div>
-            </div>
+                <MovieForm
+                    @update:modelValue="saveMovie"
+                    :modelValue="currentMovie"
+                    @cancel="hideForm"
+                />
+            </AppModal>
             <div class="flex items-center pb-8">
                 <div class="flex items-center justify-center space-x-8 text-white text-xl">
                     <span>Total Movies: {{ totalMovies }}</span>
@@ -54,10 +51,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import MovieForm from "@/MovieForm.vue";
+import { computed, defineAsyncComponent, ref } from "vue";
 import MovieItem from "@/MovieItem.vue";
 import { items } from "./movies.json";
+
+const AppModal = defineAsyncComponent(() => import("@/AppModal.vue"));
+const MovieForm = defineAsyncComponent(() => import("@/MovieForm.vue"));
 
 const movies = ref(items);
 const currentMovie = ref();

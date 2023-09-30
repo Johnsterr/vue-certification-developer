@@ -72,3 +72,18 @@
     -   `cancel`: Should be dispatched when the user clicks the `cancel` button and requires no payload.
 -   The rest of our application functionality should still work as expected.
 
+### Challenge 8
+
+-   Move the current template for the modal into the `AppModal.vue` component and modify it for general re-use.
+-   The `AppModal.vue` component should meet the following specs:
+    -   Include a `slot` for the body content
+    -   Display a close (x) button
+    -   Display a title above the body content
+    -   Receive the following props:
+        -   `title`: a string for the title, defaults to `null`.
+    -   Emit the following events:
+        -   `close`: emitted when component is closed
+-   Use the `AppModal.vue` component to display the `MovieForm` in `App.vue`
+-   Import the `AppModal.vue` and `MovieForm.vue` component asynchronously so that the components' code is only downloaded once it's displayed
+-   The rest of the app should continue to work as before
+
