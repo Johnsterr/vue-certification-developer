@@ -87,3 +87,9 @@
 -   Import the `AppModal.vue` and `MovieForm.vue` component asynchronously so that the components' code is only downloaded once it's displayed
 -   The rest of the app should continue to work as before
 
+### Challenge 9
+
+-   When the modal component appears and disappears it should be done with a smooth transition.
+-   We want to have two different transitions
+    1. the modal overlay (the dark background) should fade in
+    2. the modal itself should slide in (fade in + slide down 50px)

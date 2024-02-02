@@ -1,10 +1,10 @@
 <script setup>
 import { reactive } from "vue";
 
+const emit = defineEmits(["update:modelValue", "cancel"]);
 const props = defineProps({
     modelValue: { type: Object, default: null },
 });
-const emit = defineEmits(["update:modelValue", "cancel"]);
 
 const genres = reactive([
     { text: "Drama", value: "Drama" },
@@ -12,7 +12,6 @@ const genres = reactive([
     { text: "Action", value: "Action" },
     { text: "Comedy", value: "Comedy" },
 ]);
-
 const errors = reactive({
     name: null,
     description: null,
@@ -49,7 +48,7 @@ function validate() {
     for (const [field, rule] of Object.entries(validations)) {
         const validation = validationRules(rule);
         if (validation) {
-            if (validation.test(form[field] || "") || form[field].length === 0) {
+            if (validation.test(form[field] || "")) {
                 errors[field] = `${field} is ${rule}`;
                 valid = false;
             }
@@ -99,81 +98,56 @@ function clearErrors() {
 <template>
     <form @submit.prevent="saveMovie">
         <input type="hidden" name="id" v-model="form.id" />
-        <div class="flex flex-col items-start justify-start w-full">
+        <div class="movie-form-input-wrapper">
             <label for="name">Name</label>
-            <input
-                type="text"
-                name="name"
-                id="name"
-                v-model="form.name"
-                class="w-full dark:bg-gray-900 rounded-md border-2 border-blue-600"
-            />
-            <span class="text-red-700 h-4">{{ errors.name }}</span>
+            <input type="text" name="name" v-model="form.name" class="movie-form-input" />
+            <span class="movie-form-error">{{ errors.name }}</span>
         </div>
-        <div class="flex flex-col items-start justify-start w-full">
+        <div class="movie-form-input-wrapper">
             <label for="description">Description</label>
             <textarea
                 type="text"
                 name="description"
-                id="description"
                 v-model="form.description"
-                class="w-full dark:bg-gray-900 h-24 rounded-md border-2 border-blue-600"
+                class="movie-form-textarea"
             />
-            <span class="text-red-700 h-4">{{ errors.description }}</span>
+            <span class="movie-form-error">{{ errors.description }}</span>
         </div>
-        <div class="flex flex-col items-start justify-start w-full">
+        <div class="movie-form-input-wrapper">
             <label for="image">Image</label>
-            <input
-                type="text"
-                name="image"
-                id="image"
-                v-model="form.image"
-                class="w-full dark:bg-gray-900 rounded-md border-2 border-blue-600"
-            />
-            <span class="text-red-700 h-4">{{ errors.image }}</span>
+            <input type="text" name="image" v-model="form.image" class="movie-form-input" />
+            <span class="movie-form-error">{{ errors.image }}</span>
         </div>
-        <div class="flex flex-col items-start justify-start w-full">
+        <div class="movie-form-input-wrapper">
             <label for="genre">Genres</label>
-            <select
-                name="genre"
-                id="genre"
-                v-model="form.genres"
-                class="w-full dark:bg-gray-900 rounded-md border-2 border-blue-600"
-                multiple
-            >
+            <select name="genre" v-model="form.genres" class="movie-form-input" multiple>
                 <option v-for="option in genres" :key="option.value" :value="option.value">
                     {{ option.text }}
                 </option>
             </select>
-            <span class="text-red-700 h-4">
+            <span class="movie-form-error">
                 {{ errors.genres }}
             </span>
         </div>
-        <div class="flex flex-col items-start justify-start w-full">
-            <label for="inTheaters" class="flex items-center justify-start space-x-2">
+        <div class="movie-form-input-wrapper">
+            <label for="genre" class="movie-form-checkbox-label">
                 <input
                     type="checkbox"
-                    id="inTheaters"
                     v-model="form.inTheaters"
                     :true-value="true"
                     :false-value="false"
-                    class="rounded-md focus:bg-pink-500/25 checked:bg-pink-500 dark:bg-gray-900"
+                    class="movie-form-checkbox"
                 />
                 <span>In theaters</span>
             </label>
-            <span class="text-red-700 h-4">
+            <span class="movie-form-error">
                 {{ errors.inTheaters }}
             </span>
         </div>
-        <div class="flex items-center justify-between w-full">
-            <button
-                type="button"
-                class="bg-gray-500 hover:bg-gray-400 p-2 rounded-md text-white"
-                @click="cancelForm"
-            >
-                Cancel
-            </button>
-            <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 p-2 rounded-md text-white">
+        <div class="movie-form-actions-wrapper">
+            <button type="button" class="button" @click="cancelForm">Cancel</button>
+
+            <button type="submit" class="button-primary">
                 <span v-if="form.id">Save</span>
                 <span v-else>Create</span>
             </button>
