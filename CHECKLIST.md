@@ -93,3 +93,8 @@
 -   We want to have two different transitions
     1. the modal overlay (the dark background) should fade in
     2. the modal itself should slide in (fade in + slide down 50px)
+
+### Challenge 10
+
+-   When the modal component opens, the name field on the movie form should be focused for the user to start filling the form
+-   Use a template ref in the MovieForm component to focus the input when the component mounts to the DOM
